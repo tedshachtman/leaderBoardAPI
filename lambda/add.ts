@@ -4,8 +4,10 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 const dynamodb = new DynamoDB.DocumentClient();
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  const { userId, data } = JSON.parse(event.body as string);
-
+  
+    const parsedBody = JSON.parse(event.body as string);
+    const { userId, data } = JSON.parse(parsedBody.body);
+  console.log('event.body:', event.body);
   try {
     // Update the user's userData
     await dynamodb.update({

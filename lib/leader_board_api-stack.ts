@@ -24,16 +24,16 @@ export class LeaderBoardApiStack extends cdk.Stack {
     const updateLambda = new lambda.Function(this, 'UpdateLambda', {
       runtime: lambda.Runtime.NODEJS_16_X,
       handler: 'update.handler',
-      code: lambda.Code.fromAsset('lambda'),
+      code: lambda.Code.fromAsset('dist/lambda'),
       environment: {
         USER_TABLE_NAME: userTable.tableName,
       },
     });
 
-    const retrieveLambda = new lambda.Function(this, 'RetrieveLambda', {
+    const retreiveLambda = new lambda.Function(this, 'RetreiveLambda', {
       runtime: lambda.Runtime.NODEJS_16_X,
-      handler: 'retrieve.handler',
-      code: lambda.Code.fromAsset('lambda'),
+      handler: 'retreive.handler',
+      code: lambda.Code.fromAsset('dist/lambda'),
       environment: {
         USER_TABLE_NAME: userTable.tableName,
       },
@@ -42,7 +42,7 @@ export class LeaderBoardApiStack extends cdk.Stack {
     const addLambda = new lambda.Function(this, 'AddLambda', {
       runtime: lambda.Runtime.NODEJS_16_X,
       handler: 'add.handler',
-      code: lambda.Code.fromAsset('lambda'),
+      code: lambda.Code.fromAsset('dist/lambda'),
       environment: {
         USER_TABLE_NAME: userTable.tableName,
       },
@@ -50,7 +50,7 @@ export class LeaderBoardApiStack extends cdk.Stack {
 
     // Grant permissions to the Lambda functions
     userTable.grantReadWriteData(updateLambda);
-    userTable.grantReadData(retrieveLambda);
+    userTable.grantReadData(retreiveLambda);
     userTable.grantReadWriteData(addLambda);
 
     // Create the API Gateway
@@ -59,7 +59,7 @@ export class LeaderBoardApiStack extends cdk.Stack {
     const userResource = api.root.addResource('users');
 
     userResource.addMethod('POST', new apigateway.LambdaIntegration(updateLambda));
-    userResource.addMethod('GET', new apigateway.LambdaIntegration(retrieveLambda));
+    userResource.addMethod('GET', new apigateway.LambdaIntegration(retreiveLambda));
     userResource.addMethod('PUT', new apigateway.LambdaIntegration(addLambda));
   }
 }

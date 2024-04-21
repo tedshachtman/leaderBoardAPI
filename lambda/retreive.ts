@@ -4,7 +4,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 const dynamodb = new DynamoDB.DocumentClient();
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  const { userId } = JSON.parse(event.body as string);
+  const { userId } = event.queryStringParameters as { userId: string };
 
   try {
     // Retrieve the user's data and array of userIds
